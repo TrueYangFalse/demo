@@ -50,6 +50,7 @@ public class HelloController {
             if (gameField[i][0] == gameField[i][1] && gameField[i][0] == gameField[i][2] && (gameField[i][0] == 'x' || gameField[i][0] == 'o')) {
                 isGame = false;
                 winner = gameField[i][0] == 'x' ? Winner.X : Winner.O;
+                checkWinner();
             }
         }
 
@@ -58,6 +59,7 @@ public class HelloController {
             if (gameField[0][i] == gameField[1][i] && gameField[0][i] == gameField[2][i] && (gameField[0][i] == 'x' || gameField[0][i] == 'o')) {
                 isGame = false;
                 winner = gameField[0][i] == 'x' ? Winner.X : Winner.O;
+                checkWinner();
             }
         }
 
@@ -65,40 +67,49 @@ public class HelloController {
         if (gameField[0][0] == gameField[1][1] && gameField[0][0] == gameField[2][2] && (gameField[0][0] == 'x' || gameField[0][0] == 'o')) {
             isGame = false;
             winner = gameField[0][0] == 'x' ? Winner.X : Winner.O;
+            checkWinner();
         }
 
         // Проверка побочной диагонали
         if (gameField[0][2] == gameField[1][1] && gameField[0][2] == gameField[2][0] && (gameField[0][2] == 'x' || gameField[0][2] == 'o')) {
             isGame = false;
             winner = gameField[0][2] == 'x' ? Winner.X : Winner.O;
+            checkWinner();
         }
 
         // Проверка на ничью
-        boolean isDraw = true;
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (gameField[i][j] == '\0') {
-                    isDraw = false;
-                    break;
+        if (winner == Winner.NONE) {
+            boolean isDraw = true;
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    if (gameField[i][j] == '\0') {
+                        isDraw = false;
+                        break;
+                    }
                 }
+                if (!isDraw) break;
             }
-            if (!isDraw) break;
-        }
-        if (isDraw) {
-            isGame = false;
-            winner = Winner.DRAW;
+            if (isDraw) {
+                isGame = false;
+                winner = Winner.DRAW;
+                checkWinner();
+            }
         }
 
+        nowSym = nowSym == 'x' ? 'o' : 'x';
+    }
+
+    void checkWinner()
+    {
         if (winner != Winner.NONE){
             if(winner == Winner.DRAW){
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "У нас ничья :)", ButtonType.OK);
                 alert.showAndWait();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "У нас победитель <" + winner + ">", ButtonType.OK);
+                alert.showAndWait();
             }
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "У нас победитель <" + winner + ">", ButtonType.OK);
-            alert.showAndWait();
         }
-
-        nowSym = nowSym == 'x' ? 'o' : 'x';
     }
 
     @FXML
